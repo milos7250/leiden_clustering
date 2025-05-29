@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 from umap.umap_ import nearest_neighbors
 import leidenalg
-from scanpy.neighbors import _compute_connectivities_umap
+from scanpy.neighbors._connectivity import umap as _compute_connectivities_umap
 from scanpy._utils import get_igraph_from_adjacency
 
 
@@ -74,8 +74,8 @@ class LeidenClustering:
         knn_indices, knn_dists, forest = nearest_neighbors(pcs, **self.nn_kws)
 
         # compute connectivities
-        distances, connectivities = _compute_connectivities_umap(
-            knn_indices, knn_dists, pcs.shape[0], self.nn_kws["n_neighbors"]
+        connectivities = _compute_connectivities_umap(
+            knn_indices, knn_dists, n_obs=pcs.shape[0], n_neighbors=self.nn_kws["n_neighbors"]
         )
 
         # use connectivites as adjacency matrix to get igraph
